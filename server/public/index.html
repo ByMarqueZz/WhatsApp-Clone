@@ -3,129 +3,50 @@
   <head>
     <title>WhatsApp Clone</title>
     <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Whatsapp_logo_svg.png/600px-Whatsapp_logo_svg.png" type="image/x-icon">
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-      }
-      h1 {
-        margin: 0;
-      }
-      header {
-        position: fixed;
-        width: 100%;
-        display: flex;
-        gap: 1rem;
-        text-align: center;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        background-color: #50CC5F;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-size: 1.5rem;
-        -webkit-text-stroke: 2px black;
-      }
-      .imgHeader {
-        width: 100px;
-      }
-      .main {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        justify-content: space-between;
-        padding-top: 150px;
-      }
-      .users {
-        width:30%;
-      }
-      .chat {
-        width: 70%;
-        position: relative;
-        height: 85vh;
-        border: 1px solid black;
-        background-image: url('https://i.pinimg.com/564x/ab/63/ce/ab63ce446c82f192be2475a7b6cbf510.jpg');
-        overflow: hidden;
-        overflow-y: scroll;
-        
-      }
-      #form {
-        font-size: 1.5rem;
-        position: fixed;
-        width: 69%;
-        bottom: 0;
-        right: 0;
-        display: flex;
-        gap: 1rem;
-        background-color: white;
-        padding: 1%;
-      }
-      #input {
-        width: 95%;
-      }
-      .message {
-        background-color: #90ec9b;
-        color: white;
-        padding: 1rem;
-        margin: 1rem;
-        border-radius: 1rem;
-        font-size: 1.5rem;
-        width: 20%;
-      }
-      .login{
-        background-color: #f4dc94;
-        color: white;
-        padding: 1rem;
-        margin: 1rem;
-        border-radius: 1rem;
-        font-size: 1.5rem;
-        width: 20%;
-        text-align: center;
-        margin: 0 auto;
-      }
-      #messages {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-      /* media query menos de 500px */
-      @media (max-width: 500px) {
-        .main {
-          flex-direction: column;
-        }
-        .users {
-          width: 100%;
-        }
-        .chat {
-          width: 100%;
-        }
-        #form {
-          position: inherit;
-          width: 100%;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   </head>
   <body>
-    <header>
-      <h1>WhatsApp Web</h1>
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Whatsapp_logo_svg.png/600px-Whatsapp_logo_svg.png" class="imgHeader"/>
-    </header>
-    <div class="main">
-      <div class="users">
-          <ul>
-            <li>Paco</li>
-            <li>Paco</li>
-            <li>Paco</li>
-            <li>Paco</li>
-          </ul>
+    <!-- div con el contenido de la pagina -->
+    <div class="Logged">
+      <header>
+        <h1>WhatsApp Web</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Whatsapp_logo_svg.png/600px-Whatsapp_logo_svg.png" class="imgHeader"/>
+      </header>
+      <div class="main">
+        <div class="users">
+            <h2>Usuarios conectados</h2>
+            <ul id="listUsers">
+            </ul>
+        </div>
+        <div class="chat">
+          <div id="messages"></div>
+        </div>
+        <form id="form" action="">
+          <input id="input" autocomplete="off" /><button><img class="SubmitButton" src="https://cdn-icons-png.flaticon.com/512/3024/3024593.png"/></button>
+        </form>
       </div>
-      <div class="chat">
-        <ul id="messages"></ul>
-      </div>
-      <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
+    </div>
+    
+    <!-- formulario que sale al principio de la pagina -->
+    <div class="formularioLogin">
+      <h1 class="formularioLogin_h1">Bienvenido a WhatsApp Web Clone</h1>
+      <form class="formUser">
+        <div class="inputRadio">
+          <div>
+            <label for="radio1"><img class="imagenRadio" src="./assets/img/hombre.png" alt="Imagen"></label>
+            <input type="radio" name="myRadio" id="radio1" required>
+          </div>
+
+          <div>
+            <label for="radio2"><img class="imagenRadio" src="./assets/img/mujer.png" alt="Imagen"></label>
+            <input type="radio" name="myRadio" id="radio2" required>
+          </div>
+        </div>
+
+        <input type="text" id="username" placeholder="Username" required>
+        <button id="btnLogin" class="btn btn-success">Login</button>
       </form>
     </div>
 
@@ -133,39 +54,78 @@
     <script>
       var socket = io();
 
+      var user = null;
       var messages = document.getElementById('messages');
       var form = document.getElementById('form');
       var input = document.getElementById('input');
+      var formLogin = document.querySelector(".formUser");
+
+      formLogin.addEventListener("submit", (e)=>{
+        // quita el background de la pagina
+        document.body.style.background = "none";
+        e.preventDefault();
+        let username = document.getElementById("username").value;
+        let radio1 = document.getElementById("radio1");
+        let radio2 = document.getElementById("radio2");
+        if(radio1.checked){
+          socket.emit("userLogin", {user: username, image: "hombre.png"});
+        } else if(radio2.checked){
+          socket.emit("userLogin", {user: username, image: "mujer.png"});
+        }
+        user = username;
+        console.log(user);
+        document.querySelector(".formularioLogin").style.display = "none";
+        document.querySelector(".Logged").style.display = "block";
+      });
 
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-          socket.emit('chat message', input.value);
+          socket.emit('chat message', {user: user, message: input.value});
           input.value = '';
         }
       });
 
-      socket.on('chat message', function(msg) {
-        var item = document.createElement('li');
+      socket.on('chat message', function(json) {
+        var item = document.createElement('div');
         item.className = 'message';
-        item.textContent = msg;
+        if(json.json.user == user){
+          item.className = 'message message_user';
+        } else {
+          item.className = 'message message_other';
+        }
+        item.innerHTML = `
+          <div class="message_userText" style="color: ${json.color}">${json.json.user}</div>
+          <div class="message_text">${json.json.message}</div>
+        `;
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
       socket.on('userConnected', function(msg) {
         var item = document.createElement('li');
         item.className = 'login';
-        item.textContent = msg;
+        item.textContent = msg + ' se ha unido al chat';
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
-      socket.in('userDisconnected', function(msg) {
+      socket.on('userDisconnected', function(msg) {
         var item = document.createElement('li');
         item.className = 'login';
-        item.textContent = msg;
+        item.textContent = msg + ' ha salido del chat';
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
+      socket.on("userLogged", (userList)=>{
+        let lista = document.getElementById("listUsers");
+        lista.innerHTML = "";
+        userList.forEach((user)=>{
+          let li = document.createElement("li");
+          li.innerHTML = `<img src="./assets/img/${user.image}" alt="fotoPerfil" class="fotoUser"/>${user.user}`;
+          li.style.color = user.color;
+          lista.appendChild(li);
+        })
+        window.scrollTo(0, document.body.scrollHeight);
+      })
     </script>
   </body>
 </html>
