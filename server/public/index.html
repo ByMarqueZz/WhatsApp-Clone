@@ -13,6 +13,7 @@
       <header>
         <h1>WhatsApp Web</h1>
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Whatsapp_logo_svg.png/600px-Whatsapp_logo_svg.png" class="imgHeader"/>
+        <button class="btn btn-success" id="buttonAbandonarSala">Abandonar sala</button>
       </header>
       <div class="main">
         <div class="users">
@@ -55,10 +56,18 @@
       var socket = io();
 
       var user = null;
+      var buttonAbandonarSala = document.getElementById("buttonAbandonarSala");
       var messages = document.getElementById('messages');
       var form = document.getElementById('form');
       var input = document.getElementById('input');
       var formLogin = document.querySelector(".formUser");
+
+      buttonAbandonarSala.addEventListener("click", ()=>{
+        socket.emit("userDisconnected", user);
+        document.body.style.backgroundImage = "url('https://i.pinimg.com/564x/ab/63/ce/ab63ce446c82f192be2475a7b6cbf510.jpg')";
+        document.querySelector(".formularioLogin").style.display = "block";
+        document.querySelector(".Logged").style.display = "none";
+      });
 
       formLogin.addEventListener("submit", (e)=>{
         // quita el background de la pagina

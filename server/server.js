@@ -18,8 +18,10 @@ io.on('connection', (socket) => {
     io.emit('userConnected', user.user)
   });
 
-  socket.on('disconnect', () => {
-    io.emit('userDisconnected', 'User');
+  socket.on('userDisconnected', (user) => {
+    users = users.filter(x => x.user !== user);
+    io.emit('userLogged', users);
+    io.emit('userDisconnected', user);
   });
   socket.on('chat message', (json) => {
     io.emit('chat message', {json: json, color: users.find(x => x.user === json.user).color});

@@ -161,6 +161,7 @@ header {
 .fotoUser {
     max-width: 100px;
 }
+
 /* media query menos de 500px */
 @media (max-width: 700px) {
     .main {
